@@ -17,7 +17,7 @@ export default function QRScanner() {
 
   if (!permission.granted) {
     return (
-      <View className="flex justify-center items-center bg-[#1a1a1a]">
+      <View className="flex justify-center items-center bg-[#1a1a1a] h-full">
         <Text className="text-white text-center">
           We need your permission to access the camera
         </Text>

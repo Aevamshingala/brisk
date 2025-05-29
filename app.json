@@ -16,7 +16,10 @@
         "foregroundImage": "./assets/images/brisk_logo.jpeg",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.CAMERA", "android.permission.CAMERA"],
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "com.aevam.brisk"
     },
     "web": {
@@ -46,6 +49,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "56b3f946-de6a-4cbf-bffd-401c068d6d96"
+      }
     }
   }
 }

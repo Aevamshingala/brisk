@@ -4,10 +4,10 @@ import * as ImagePicker from "expo-image-picker";
 
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
+import { Image } from "expo-image";
 import {
   View,
   Text,
-  Image,
   FlatList,
   TouchableOpacity,
   Alert,
@@ -22,7 +22,7 @@ interface qrdata {
   createdAt: string;
 }
 export default function Profile() {
-  const { user, token } = useAuthStore();
+  const { user, token, logout } = useAuthStore();
   const [memberSince, setMemberSince] = useState("");
   const [imageUrl, setImageUrl] = useState(
     "https://cdn.pixabay.com/photo/2021/10/07/00/48/boat-6686952_1280.jpg"
@@ -143,6 +143,13 @@ export default function Profile() {
           {user?.userName}
         </Text>
         <Text className="text-gray-400">{memberSince}</Text>
+        <TouchableOpacity
+          className="
+          flex justify-center items-center bg-red-300 mt-3 py-2 px-5 rounded-2xl"
+          onPress={logout}
+        >
+          <Text className="text-white text-center">Logout</Text>
+        </TouchableOpacity>
       </View>
 
       {/* QR Code Posts */}
@@ -164,6 +171,20 @@ export default function Profile() {
           </View>
         )}
       />
+      {qrdata.length <= 0 && (
+        <View className="flex-1 items-center justify-center opacity-85">
+          <View className="border-2 border-dashed border-[#f5bc4a]/30 rounded-3xl w-64 h-72 flex items-center justify-center -mt-40">
+            <Image
+              source={require("../../../assets/images/QR Code-bro.png")}
+              style={{ width: 200, height: 200 }}
+              contentFit="cover"
+            />
+            <Text className="text-white mt-2 text-center px-6 mb-2">
+              Create qr code with Brisk
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 }

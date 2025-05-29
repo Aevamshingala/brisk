@@ -5,6 +5,8 @@ import SafeScreen from "@/components/SafeScreen";
 import { StatusBar } from "expo-status-bar";
 import { useAuthStore } from "@/store/auth.Store";
 import { useEffect } from "react";
+import * as Network from "expo-network";
+import { Alert } from "react-native";
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
@@ -12,6 +14,14 @@ export default function RootLayout() {
   const { checkAuth, user, token } = useAuthStore();
   useEffect(() => {
     checkAuth();
+    const checkConnection = async () => {
+      const networkState = await Network.getNetworkStateAsync();
+      if (!networkState.isConnected && networkState.isInternetReachable) {
+        Alert.alert("Network", "please check your network");
+      }
+    };
+
+    checkConnection();
   }, []);
   useEffect(() => {
     const inAuth = segments[0] == "(auth)";
