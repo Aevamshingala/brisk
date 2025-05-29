@@ -38,14 +38,12 @@ export default function Profile() {
 
   useEffect(() => {
     const getqrdata = async () => {
-      setIsLoding(true);
       const response = await fetch(`${baseUrl}/api/v1/qr/myqr`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setIsLoding(false);
       const data = await response.json();
       if (response.status != 200) {
         Alert.alert("problem", "somthing went wrong");
@@ -63,7 +61,6 @@ export default function Profile() {
       }
     };
     getqrdata();
-    return () => setIsLoding(false);
   }, []);
 
   useEffect(() => {
@@ -99,6 +96,7 @@ export default function Profile() {
         name: result.assets[0]?.fileName,
         type: result.assets[0]?.mimeType,
       } as any);
+      setIsLoding(true);
 
       const response = await fetch(`${baseUrl}/api/v1/user/profilepic`, {
         method: "POST",
@@ -107,6 +105,7 @@ export default function Profile() {
         },
         body: data,
       });
+      setIsLoding(false);
 
       if (response.status == 200) {
         const res = await response.json();
