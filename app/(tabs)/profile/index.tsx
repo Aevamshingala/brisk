@@ -129,7 +129,6 @@ export default function Profile() {
       }
 
       const res = await response.json();
-      await updateuser();
       setImageUrl(res.data?.avatar?.url || res.data?.avatar);
     } catch (error: any) {
       Alert.alert("Error", error.message || "Failed to update profile picture");

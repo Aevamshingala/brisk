@@ -12,9 +12,10 @@ export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
 
-  const { checkAuth, user, token } = useAuthStore();
+  const { checkAuth, user, token, updateuser } = useAuthStore();
   useEffect(() => {
     const checkConnection = async () => {
+      await updateuser();
       const networkState = await Network.getNetworkStateAsync();
       if (!networkState.isConnected || !networkState.isInternetReachable) {
         Alert.alert("Network", "Please check your internet connection.");
