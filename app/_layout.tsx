@@ -4,33 +4,35 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import SafeScreen from "@/components/SafeScreen";
 import { StatusBar } from "expo-status-bar";
 import { useAuthStore } from "@/store/auth.Store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as Network from "expo-network";
 import { Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
 
   const { checkAuth, user, token } = useAuthStore();
   useEffect(() => {
-    checkAuth();
     const checkConnection = async () => {
       const networkState = await Network.getNetworkStateAsync();
-      if (!networkState.isConnected && networkState.isInternetReachable) {
-        Alert.alert("Network", "please check your network");
+      if (!networkState.isConnected || !networkState.isInternetReachable) {
+        Alert.alert("Network", "Please check your internet connection.");
       }
     };
 
     checkConnection();
   }, []);
+
   useEffect(() => {
+    checkAuth();
     const inAuth = segments[0] == "(auth)";
     const isSignIn = user && token;
 
     if (!isSignIn && !inAuth) {
       router.replace("/(auth)");
     } else if (isSignIn && inAuth) router.replace("/(tabs)");
-  }, [user, token, segments]);
+  }, [user, token]);
 
   return (
     <SafeAreaProvider>

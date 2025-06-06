@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
@@ -29,11 +30,12 @@ export default function GalleryPicker() {
 
     // Launch the image picker
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "images", // or Videos, or All
+      mediaTypes: "images",
       quality: 1,
-      selectionLimit: 5,
+      selectionLimit: 10,
       allowsMultipleSelection: true,
       base64: false,
+      orderedSelection: true,
     });
 
     if (!result.canceled) {
@@ -85,93 +87,95 @@ export default function GalleryPicker() {
   };
 
   return (
-    <View className="flex-1 items-center justify-start bg-[#101010] p-6">
-      {/* Animated Header */}
-      <View className="mt-12 mb-8">
-        <Text className="text-white text-4xl font-bold text-center tracking-tighter">
-          Create Your Visual Story with
-        </Text>
-        <View className="flex-row justify-center items-center mt-3">
-          <Text className="text-[#f5bc4a] text-5xl font-extrabold tracking-tight">
-            BRISK
+    <ScrollView className="h-full bg-[#1a1a1a]">
+      <View className="flex-1 items-center justify-start bg-[#1a1a1a] p-6">
+        {/* Animated Header */}
+        <View className="mt-12 mb-8">
+          <Text className="text-white text-4xl font-bold text-center tracking-tighter">
+            Create Your Visual Story with
           </Text>
-          <View className="ml-2 w-3 h-3 bg-[#f5bc4a] rounded-full animate-pulse" />
-        </View>
-      </View>
-
-      {/* Decorative Elements */}
-      <View className="absolute top-20 left-5 w-4 h-4 bg-[#f5bc4a]/30 rounded-full" />
-      <View className="absolute bottom-40 right-8 w-6 h-6 bg-[#f5bc4a]/20 rounded-full" />
-
-      {/* Main CTA */}
-      <TouchableOpacity
-        onPress={pickImage}
-        activeOpacity={0.7}
-        className="mt-10 mb-12 transform active:scale-95 transition-all duration-150"
-      >
-        <View className="bg-[#f5bc4a] w-72 h-16 rounded-full flex items-center justify-center shadow-2xl shadow-[#f5bc4a]/40">
-          <Text className="text-[#0a0a0a] text-xl font-bold tracking-wide">
-            SELECT IMAGES
-          </Text>
-          <View className="absolute -right-2 -top-2 bg-white w-8 h-8 rounded-full flex items-center justify-center shadow border-black border-2">
-            <Text className="text-[#222222] font-bold text-lg">+</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      {/* Gallery Section */}
-      {image.length > 0 ? (
-        <View className="flex-1 w-full">
-          <Text className="text-white/80 text-lg font-medium mb-4 ml-2 ">
-            Your Selections ({image.length})
-          </Text>
-          <View className="flex justify-center items-center">
-            <FlatList
-              renderItem={({ item }) => (
-                <View className="mr-5 rounded-2xl overflow-hidden shadow-2xl bg-[#2a2a2a]">
-                  <Image
-                    source={{ uri: item }}
-                    style={{ width: 160, height: 160 }}
-                    contentFit="cover"
-                  />
-                </View>
-              )}
-              data={image}
-              numColumns={2}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => `image-${index}`}
-            />
-          </View>
-          {/* Main CTA */}
-          <View className="flex justify-center items-center">
-            <TouchableOpacity
-              onPress={handleCreate}
-              activeOpacity={0.7}
-              className="mt-10 mb-12 transform active:scale-95 transition-all duration-150"
-            >
-              <View className="bg-[#f5bc4a] w-72 h-16 rounded-full flex items-center justify-center shadow-2xl shadow-[#f5bc4a]/40">
-                {isLoding && <ActivityIndicator color={"#ffffff"} />}
-                <Text className="text-[#0a0a0a] text-xl font-bold tracking-wide">
-                  Create
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ) : (
-        <View className="flex-1 items-center justify-center opacity-85">
-          <View className="border-2 border-dashed border-[#f5bc4a]/30 rounded-3xl w-64 h-72 flex items-center justify-center">
-            <Image
-              source={require("../../assets/images/Camera-bro.png")}
-              style={{ width: 200, height: 200 }}
-              contentFit="cover"
-            />
-            <Text className="text-white mt-2 text-center px-6 mb-2">
-              Your amazing photos will appear here
+          <View className="flex-row justify-center items-center mt-3">
+            <Text className="text-[#f5bc4a] text-5xl font-extrabold tracking-tight">
+              BRISK
             </Text>
+            <View className="ml-2 w-3 h-3 bg-[#f5bc4a] rounded-full animate-pulse" />
           </View>
         </View>
-      )}
-    </View>
+
+        {/* Decorative Elements */}
+        <View className="absolute top-20 left-5 w-4 h-4 bg-[#f5bc4a]/30 rounded-full" />
+        <View className="absolute bottom-40 right-8 w-6 h-6 bg-[#f5bc4a]/20 rounded-full" />
+
+        {/* Main CTA */}
+        <TouchableOpacity
+          onPress={pickImage}
+          activeOpacity={0.7}
+          className="mt-10 mb-12 transform active:scale-95 transition-all duration-150"
+        >
+          <View className="bg-[#f5bc4a] w-72 h-16 rounded-full flex items-center justify-center ">
+            <Text className="text-[#0a0a0a] text-xl font-bold tracking-wide">
+              SELECT IMAGES
+            </Text>
+            <View className="absolute -right-2 -top-2 bg-white w-8 h-8 rounded-full flex items-center justify-center shadow border-black border-2">
+              <Text className="text-[#222222] font-bold text-lg">+</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        {/* Gallery Section */}
+        {image.length > 0 ? (
+          <View className="flex-1 w-full">
+            <Text className="text-white/80 text-lg font-medium mb-4 ml-2 ">
+              Your Selections ({image.length})
+            </Text>
+            <View className="flex justify-center items-center">
+              <FlatList
+                renderItem={({ item }) => (
+                  <View className="mr-4 rounded-2xl overflow-hidden shadow-2xl bg-[#2a2a2a] mt-2">
+                    <Image
+                      source={{ uri: item }}
+                      style={{ width: 150, height: 150 }}
+                      contentFit="cover"
+                    />
+                  </View>
+                )}
+                data={image}
+                numColumns={2}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item, index) => `image-${index}`}
+              />
+            </View>
+            {/* Main CTA */}
+            <View className="flex justify-center items-center">
+              <TouchableOpacity
+                onPress={handleCreate}
+                activeOpacity={0.7}
+                className="mt-10 mb-12 transform active:scale-95 transition-all duration-150"
+              >
+                <View className="bg-[#f5bc4a] w-72 h-16 rounded-full flex items-center justify-center shadow-2xl shadow-[#f5bc4a]/40">
+                  {isLoding && <ActivityIndicator color={"#ffffff"} />}
+                  <Text className="text-[#0a0a0a] text-xl font-bold tracking-wide">
+                    Create
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <View className="flex-1 items-center justify-center opacity-85">
+            <View className="border-2 border-dashed border-[#f5bc4a]/30 rounded-3xl w-64 h-72 flex items-center justify-center">
+              <Image
+                source={require("../../assets/images/Camera-bro.png")}
+                style={{ width: 200, height: 200 }}
+                contentFit="cover"
+              />
+              <Text className="text-white mt-2 text-center px-6 mb-2">
+                Your amazing photos will appear here
+              </Text>
+            </View>
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 }

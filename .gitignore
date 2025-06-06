@@ -38,3 +38,4 @@ app-example
 .env
 
 android
+expo-env.d.ts

@@ -5,6 +5,7 @@ import {
   FlatList,
   Alert,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
@@ -19,7 +20,7 @@ export default function ImageDownload() {
   const [selectAll, setSelectAll] = useState<boolean>(false);
 
   const { scannedData } = useLocalSearchParams();
-
+  const [isLoding, setIsLoding] = useState(false);
   const [images, setImages] = useState([]);
   const { token } = useAuthStore();
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function ImageDownload() {
         body: JSON.stringify({ imagesId: scannedData }),
       });
       if (response.status != 200) {
-        Alert.alert("Problem", "somthing went Wrong");
+        Alert.alert("Problem", "somthing went Wrong in images");
         return;
       } else {
         const data = await response.json();
@@ -47,6 +48,7 @@ export default function ImageDownload() {
   const handleSaveToGallery = async () => {
     try {
       // Request permissions first
+      setIsLoding(true);
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (download.length <= 0) {
         Alert.alert("Select Image", "Please select Image.");
@@ -90,11 +92,13 @@ export default function ImageDownload() {
           );
         }
       }
-
+      setIsLoding(false);
       Alert.alert("Success", "Successfully  save photos to gallery.");
     } catch (error) {
       Alert.alert("Error", "Failed to save photos to gallery.");
       console.error(error);
+    } finally {
+      setIsLoding(false);
     }
   };
   const handleSelect = (item: any) => {
@@ -118,9 +122,10 @@ export default function ImageDownload() {
         <View className="relative overflow-hidden rounded-xl">
           <Image
             source={{
-              uri: "https://res.cloudinary.com/dlekzj6ii/image/upload/v1748418718/mjylujc6gawi7mc9cc7c.jpg",
+              uri: items.item,
             }}
-            style={{ width: 160, height: 160, resizeMode: "cover" }}
+            style={{ width: 160, height: 160 }}
+            resizeMode="cover"
             contentFit="cover"
             className={`transition-opacity duration-300 ${
               isSelected ? "opacity-70" : "opacity-100"
@@ -188,9 +193,13 @@ export default function ImageDownload() {
           className="bg-[#f5bb4a] px-6 py-3 rounded-full flex-1 mr-2"
           activeOpacity={0.8}
         >
-          <Text className="text-[#0a0a0a] text-lg font-semibold text-center">
-            Save to Gallery
-          </Text>
+          {isLoding ? (
+            <ActivityIndicator color={"#ffffff"} />
+          ) : (
+            <Text className="text-[#0a0a0a] text-lg font-semibold text-center">
+              Save to Gallery
+            </Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity

@@ -152,9 +152,11 @@ export default function QRGenerator() {
             <Text className="text-white text-3xl">Brisk</Text>
           </View>
 
-          <TouchableOpacity className="mr-4" onPress={handleShare}>
-            <Feather name="share" size={25} color="#f5bb4a" />
-          </TouchableOpacity>
+          {complit && (
+            <TouchableOpacity className="mr-4" onPress={handleShare}>
+              <Feather name="share" size={25} color="#f5bb4a" />
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* QR Input Section */}

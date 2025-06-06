@@ -45,7 +45,7 @@ export default function Login() {
     reValidateMode: "onChange",
   });
 
-  const [isshow, setIsShow] = useState<boolean>(false);
+  const [isshow, setIsShow] = useState<boolean>(true);
 
   const { login, isLoading } = useAuthStore();
 
@@ -54,7 +54,7 @@ export default function Login() {
 
     const res = await login(email, password);
 
-    return Alert.alert(res.message);
+    return Alert.alert("Info", res.message);
   };
   return (
     <>
@@ -62,8 +62,8 @@ export default function Login() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ScrollView>
-          <View className=" h-screen" style={style.background}>
+        <ScrollView className="h-full bg-[#1a1a1a]">
+          <View className="h-full py-5" style={style.background}>
             <View className=" flex justify-center items-center mt-10">
               <Text className="text-3xl text-white">Sign Up or Login</Text>
             </View>

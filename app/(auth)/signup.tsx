@@ -5,6 +5,8 @@ import {
   View,
   ActivityIndicator,
   Alert,
+  ScrollViewComponent,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -26,15 +28,26 @@ const Signup = () => {
     reValidateMode: "onChange",
   });
   const password = watch("password");
-  const [isshow, setIsShow] = useState<boolean>(false);
-  const [isshowCon, setIsShowCon] = useState<boolean>(false);
-  const { register, isLoding } = useAuthStore();
+  const [isshow, setIsShow] = useState<boolean>(true);
+  const [isLoding, setIsLoding] = useState<boolean>(true);
+  const [isshowCon, setIsShowCon] = useState<boolean>(true);
+  const { register } = useAuthStore();
   const onsubmit = async (data: any) => {
     const { email, password } = data;
     const userName = data.name;
+    setIsLoding(true);
     const res = await register(userName, email, password);
+    console.log(res);
 
-    return Alert.alert("Info", res.message);
+    setIsLoding(false);
+    if (!res.success) {
+      return Alert.alert("Problem", "somthing went wrong");
+    } else {
+      return Alert.alert(
+        "Info",
+        "you are registered successfully please login"
+      );
+    }
   };
 
   return (
@@ -240,7 +253,11 @@ const Signup = () => {
       </View>
       <View className="flex justify-center items-center mt-10">
         <TouchableOpacity onPress={handleSubmit(onsubmit)}>
-          {isLoding && <ActivityIndicator color={"#ffffff"} />}
+          {isLoding && (
+            <>
+              <ActivityIndicator color={"#ffffff"} />
+            </>
+          )}
           <Text className="bg-[#f5bb4a] w-56 h-12 rounded-full text-center align-middle text-[#0a0a0a] text-xl">
             Sign up
           </Text>
