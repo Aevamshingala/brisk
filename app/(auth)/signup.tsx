@@ -30,7 +30,7 @@ const Signup = () => {
   const password = watch("password");
   const [isshow, setIsShow] = useState<boolean>(true);
   const [isLoding, setIsLoding] = useState<boolean>(true);
-  const [isshowCon, setIsShowCon] = useState<boolean>(true);
+  const [isshowCon, setIsShowCon] = useState<boolean>(false);
   const { register } = useAuthStore();
   const onsubmit = async (data: any) => {
     const { email, password } = data;
