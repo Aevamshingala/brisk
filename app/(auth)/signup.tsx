@@ -37,7 +37,7 @@ const Signup = () => {
     const userName = data.name;
     setIsLoding(true);
     const res = await register(userName, email, password);
-    console.log(res);
+    console.log("response", res);
 
     setIsLoding(false);
     if (!res.success) {

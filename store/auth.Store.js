@@ -19,16 +19,22 @@ export const useAuthStore = create((set) => ({
       );
 
       const data = response.data;
+      console.log(data);
+      7;
+
       if (!response) {
         throw new Error(data.message || "somthing went wrong");
       }
-      await AsyncStorage.setItem("user", JSON.stringify(data.data?.user));
+      await AsyncStorage.setItem("user", JSON.stringify(data?.data));
 
-      set({ user: data.data?.user, isLoading: false });
+      set({ user: data?.data, isLoading: false });
+      
       return { success: true, message: data.message };
     } catch (error) {
       set({ isLoading: false });
       return { success: false, error: error.response?.data?.message };
+    }finally{
+      set({isLoading:false})
     }
   },
 
@@ -92,14 +98,13 @@ export const useAuthStore = create((set) => ({
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response.json());
+      console.log(response.data);
 
       const data = await response.json();
-      console.log(data);
 
-      set({ user: data });
+      set({ user: data?.data });
       await AsyncStorage.setItem("user", JSON.stringify(data.data));
-      console.log(data);
+      return data
     } catch (error) {
       console.log(error);
     }

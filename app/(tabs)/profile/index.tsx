@@ -12,6 +12,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 interface QRData {
   id: string;
   title: string;
@@ -129,7 +130,10 @@ export default function Profile() {
       }
 
       const res = await response.json();
-      setImageUrl(res.data?.avatar?.url || res.data?.avatar);
+      const data = updateuser();
+      await AsyncStorage.setItem("user", data);
+      setImageUrl({ uri: res.data?.avatar?.url });
+      Alert.alert("Info", "profile picture updated sucessfully");
     } catch (error: any) {
       Alert.alert("Error", error.message || "Failed to update profile picture");
     } finally {
