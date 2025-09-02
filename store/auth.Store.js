@@ -28,13 +28,13 @@ export const useAuthStore = create((set) => ({
       await AsyncStorage.setItem("user", JSON.stringify(data?.data));
 
       set({ user: data?.data, isLoading: false });
-      
+
       return { success: true, message: data.message };
     } catch (error) {
       set({ isLoading: false });
       return { success: false, error: error.response?.data?.message };
-    }finally{
-      set({isLoading:false})
+    } finally {
+      set({ isLoading: false });
     }
   },
 
@@ -86,10 +86,34 @@ export const useAuthStore = create((set) => ({
     set({ user: null, token: null });
   },
 
+  // updateuser: async () => {
+  //   try {
+  //     const token = await AsyncStorage.getItem("token");
+  //     console.log(token);
+
+  //     const response = await fetch(`${baseUrl}/api/v1/user/getdata`, {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+  //     console.log(response.data);
+
+  //     const data = await response.json();
+
+  //     set({ user: data?.data });
+  //     await AsyncStorage.setItem("user", JSON.stringify(data.data));
+  //     return data;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // },
+
   updateuser: async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      console.log(token);
+      console.log("Access Token:", token);
 
       const response = await fetch(`${baseUrl}/api/v1/user/getdata`, {
         method: "POST",
@@ -98,15 +122,43 @@ export const useAuthStore = create((set) => ({
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response.data);
+
+      // if token expired, backend will usually send 401
+      if (response.status === 401) {
+        console.log("Token expired. Logging out user...");
+
+        // clear storage
+        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem("user");
+
+        // navigate to login screen
+        // (assuming you use React Navigation)
+        navigation.replace("Login");
+
+        return {
+          success: false,
+          message: "Session expired. Please log in again.",
+        };
+      }
 
       const data = await response.json();
 
       set({ user: data?.data });
       await AsyncStorage.setItem("user", JSON.stringify(data.data));
-      return data
+
+      return data;
     } catch (error) {
-      console.log(error);
+      console.log("Update User Error:", error.message);
+
+      // catch token-specific error thrown by jwt verify (if backend sends it in response body)
+      if (error.message.includes("jwt expired")) {
+        console.log("JWT expired. Logging out...");
+
+        await AsyncStorage.removeItem("token");
+        await AsyncStorage.removeItem("user");
+
+        navigation.replace("Login");
+      }
     }
   },
 }));
