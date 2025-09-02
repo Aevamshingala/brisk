@@ -110,7 +110,7 @@ export default function GalleryPicker() {
         <TouchableOpacity
           onPress={pickImage}
           activeOpacity={0.7}
-          className="mt-10 mb-12 transform active:scale-95 transition-all duration-150"
+          className="mt-10 mb-12 "
         >
           <View className="bg-[#f5bc4a] w-72 h-16 rounded-full flex items-center justify-center ">
             <Text className="text-[#0a0a0a] text-xl font-bold tracking-wide">
